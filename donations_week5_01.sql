@@ -1,4 +1,5 @@
 USE gc200395896;
+morem changes
 elias
 DROP TABLE IF EXISTS donations;
 CREATE TABLE donations (
