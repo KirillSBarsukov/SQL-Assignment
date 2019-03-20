@@ -1,5 +1,5 @@
 USE gc200395896;
-
+gwerg43334
 DROP TABLE IF EXISTS donations;
 CREATE TABLE donations (
 
