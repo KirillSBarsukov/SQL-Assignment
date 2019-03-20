@@ -1,5 +1,5 @@
 USE gc200395896;
-
+fghsdrgrdgdr
 DROP TABLE IF EXISTS donations;
 CREATE TABLE donations (
 
@@ -18,12 +18,12 @@ VALUES ('Sue', 'Wilson', 'London South, NDP');
 
 /*View the donations table*/
 SELECT * FROM donations;
-/*Is this in 1NF (first normal form)? 
+/*Is this in 1NF (first normal form)?
  No, it needs a unqiue identifier (key) for each row
  Let add a column called donorID*/
  ALTER TABLE donations
  ADD donorID INT NOT NULL AUTO_INCREMENT PRIMARY KEY;
- 
+
 /*Let's make the donorID the first column*/
 ALTER TABLE donations
 MODIFY COLUMN donorID INT FIRST;
@@ -39,7 +39,7 @@ MODIFY COLUMN recipient VARCHAR(255) AFTER donorID;
   ADD riding VARCHAR(50),
   ADD party VARCHAR(50);
 
-SELECT * FROM donations;  
+SELECT * FROM donations;
 /*We need to populate these new fields, let's write some queries to do that*/
 /*OR try substring index*/
 SELECT recipient, SUBSTR(recipient,1,INSTR(recipient, ',')-1) FROM donations;
