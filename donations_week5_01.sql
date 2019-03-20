@@ -1,5 +1,5 @@
 USE gc200395896;
-fghsdrgrdgdr
+
 DROP TABLE IF EXISTS donations;
 CREATE TABLE donations (
 
