@@ -3,6 +3,7 @@ elias
 DROP TABLE IF EXISTS donations;
 CREATE TABLE donations (
 
+kirill this is for you
 first_name VARCHAR(20) NOT NULL,
 last_name VARCHAR(20) NOT NULL,
 recipient VARCHAR(255) NOT NULL );
