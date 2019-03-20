@@ -2,7 +2,7 @@ USE gc200395896;
 elias
 DROP TABLE IF EXISTS donations;
 CREATE TABLE donations (
-
+Elias!!!!!!!!!!!!!
 kirill this is for you
 first_name VARCHAR(20) NOT NULL,
 last_name VARCHAR(20) NOT NULL,
