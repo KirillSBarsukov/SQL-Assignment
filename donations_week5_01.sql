@@ -1,62 +1,110 @@
-USE gc200395896;
-morem changes
-elias
-DROP TABLE IF EXISTS donations;
-CREATE TABLE donations (
-Elias!!!!!!!!!!!!!
-kirill this is for you
-first_name VARCHAR(20) NOT NULL,
-last_name VARCHAR(20) NOT NULL,
-recipient VARCHAR(255) NOT NULL );
+USE gcc200393648;
 
-INSERT INTO donations (first_name, last_name, recipient)
-VALUES ('Eric', 'Smith', 'Barrie, Liberal Party');
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS items;
+DROP TABLE IF EXISTS employees;
 
-INSERT INTO donations (first_name, last_name, recipient)
-VALUES ('Alicia', 'Jones', 'Simcoe North, Conservative Party');
+CREATE TABLE items (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR (50) NOT NULL,
+price DECIMAL (4,2)
+);
 
-INSERT INTO donations (first_name, last_name, recipient)
-VALUES ('Sue', 'Wilson', 'London South, NDP');
+CREATE TABLE customers (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR (100) NOT NULL,
+last_name VARCHAR (100) NOT NULL
 
-/*View the donations table*/
-SELECT * FROM donations;
-/*Is this in 1NF (first normal form)?
- No, it needs a unqiue identifier (key) for each row
- Let add a column called donorID*/
- ALTER TABLE donations
- ADD donorID INT NOT NULL AUTO_INCREMENT PRIMARY KEY;
+);
 
-/*Let's make the donorID the first column*/
-ALTER TABLE donations
-MODIFY COLUMN donorID INT FIRST;
+CREATE TABLE employees (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+employee_name VARCHAR (50) NOT NULL
+);
 
-/*Let's move the recipient column to be the 2nd column*/
-ALTER TABLE donations
-MODIFY COLUMN recipient VARCHAR(255) AFTER donorID;
+CREATE TABLE orders (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+quantity INT NOT NULL,
+date VARCHAR (15) NOT NULL,
+items_id INT NOT NULL,
+customers_id INT NOT NULL,
+employees_id INT NOT NULL,
+FOREIGN KEY (items_id) REFERENCES items(id),
+FOREIGN KEY (customers_id) REFERENCES customers(id),
+FOREIGN KEY (employees_id) REFERENCES employees(id)
+);
 
+CREATE TABLE reviews (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+reviews VARCHAR (350) NOT NULL,
+orders_id INT NOT NULL,
+FOREIGN KEY (orders_id) REFERENCES orders(id)
+);
 
-/*The riding and political parties are currently in the same column, which is not atomic.  As such, we need to
-  add 2 columns*/
-  ALTER TABLE donations
-  ADD riding VARCHAR(50),
-  ADD party VARCHAR(50);
+INSERT INTO customers (name, last_name)
+VALUES ('Kirill', 'Varsukov'),
+('Radhika', 'Kamur'),
+('Juanpi', 'Sovera'),
+('Anju', 'Chawla'),
+('Vladimir','Putin'),
+('Homer','Simpsom')
+;
 
-SELECT * FROM donations;
-/*We need to populate these new fields, let's write some queries to do that*/
-/*OR try substring index*/
-SELECT recipient, SUBSTR(recipient,1,INSTR(recipient, ',')-1) FROM donations;
+INSERT INTO items (name, price)
+VALUES ('Burguer', 6.50),
+('Fries', 5.00),
+('Coke', 2.00),
+('Hot Dog', 4.50),
+('Poutine', 4.00)
+;
 
-/*Now let's update the riding column with this information*/
-UPDATE donations
-SET riding = SUBSTR(recipient,1,INSTR(recipient, ',')-1);
+INSERT INTO employees (employee_name)
+VALUES ('Justin Bieber'),
+('Nicholas Maduro'),
+('Cristiano Ronaldo'),
+('Bill Gates'),
+('Kim Kardasian')
+;
 
-/*Create a query to give us the political party*/
-SELECT recipient, SUBSTR(recipient,INSTR(recipient, ',')+2) FROM donations;
-/*We've tested our query, let's update the table*/
-UPDATE donations
-SET party = SUBSTR(recipient,INSTR(recipient, ',')+2);
-/*We now need to DROP the recipient column*/
-ALTER TABLE donations
-DROP COLUMN recipient;
-/*We are now in first normal form!  Also known as 1NF*/
-SELECT * FROM donations;
+INSERT INTO orders (quantity, date, items_id, customers_id, employees_id)
+VALUES (3, '12/01/2019',1,1,1),
+(2, '12/01/2019',2,3,2),
+(1, '12/01/2019',1,5,4),
+(2, '12/01/2019',5,1,3),
+(2, '12/01/2019',2,2,2),
+(2, '12/01/2019',3,4,1),
+(3, '12/01/2019',4,2,1),
+(4, '12/01/2019',3,1,2),
+(1, '12/01/2019',5,3,4),
+(2, '12/01/2019',2,4,5),
+(3, '12/01/2019',5,5,1),
+(2, '12/01/2019',3,3,3),
+(5, '12/01/2019',4,4,2),
+(1, '12/01/2019',5,1,1),
+(2, '12/01/2019',2,2,3),
+(4, '12/01/2019',2,4,5)
+;
+
+INSERT INTO reviews (reviews, orders_id)
+VALUES ('The hamburguer and the Asian girl that cooks were absolutely amazing <3!' , 1),
+('Best burguer in Barrie!!', 4),
+('I will difinitely come back', 6),
+('Can not wait to bring my lover here. Excellent place!', 7),
+('Niaaaa, you could improve', 10)
+;
+
+SELECT * FROM customers;
+SELECT * FROM orders;
+SELECT * FROM items;
+SELECT * FROM reviews;
+SELECT * FROM employees;
+
+#a. All customers, orders and order items grouped by customers and orders
+
+SELECT customers.name AS 'Customer Name', items.name AS 'Menu' , orders.id AS 'Nº of Order', orders.quantity AS 'Quantity'
+FROM orders INNER JOIN customers ON orders.customers_id = customers.id
+INNER JOIN items ON orders.items_id = items.id
+ORDER BY customers.id, orders.id
+;
