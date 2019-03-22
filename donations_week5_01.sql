@@ -120,7 +120,10 @@ INNER JOIN items ON orders.item_id = items.id
 ORDER BY customers.name, orders.id;
 
 #b. All customers, orders, and reviews ordered by review date (newest first).
-#SELECT customers.name, 
+SELECT customers.name, orders.id, reviews.reviews, orders.date FROM customers
+JOIN orders ON customers.id = orders.customer_id
+JOIN reviews ON orders.id = reviews.order_id
+ORDER BY orders.date DESC;
 
 #c. All customers and orders, sorted by price of orders highest first.
 SELECT customers.name, orders.id, (orders.quantity * items.price) AS 'Total of order'  FROM customers
@@ -133,8 +136,20 @@ ORDER BY orders.quantity DESC;
 #e. Display the item(s) that is the most popular. You must use a nested query in case there are more than one item.
 
 #f. Find the average cost of an order for each employee in descending order.
+SELECT employees.employee_name, orders.id, orders.quantity, items.price, (orders.quantity * items.price) AS 'Total of order'  
+FROM customers
+JOIN orders ON customers.id = orders.customer_id
+JOIN employees ON orders.employee_id = employees.id
+JOIN items ON orders.item_id = items.id
+ORDER BY orders.quantity DESC;
 
 #g. The number of orders and total amount sold of each employee.
+SELECT employees.employee_name AS 'Employee', COUNT(orders.quantity) AS 'Number of orders', (orders.quantity * items.price) AS 'Total amount sold'  
+FROM customers
+JOIN orders ON customers.id = orders.customer_id
+JOIN employees ON orders.employee_id = employees.id
+JOIN items ON orders.item_id = items.id
+GROUP BY employees.employee_name;
 
 #h. Determine which employee has the highest sales to order ratio. Meaning add up all the sales of the employee and divided by the number of orders.
 
