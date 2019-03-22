@@ -55,7 +55,8 @@ VALUES ('Kirill', 'Varsukov'),
 ('Juanpi', 'Sovera'),
 ('Anju', 'Chawla'),
 ('Vladimir','Putin'),
-('Homer','Simpsom')
+('Homer','Simpsom'),
+('Alias', 'Mumbay')
 ;
 
 # Insert items into the table
@@ -133,30 +134,40 @@ ORDER BY orders.quantity DESC;
 
 #d. All the people who have spent the most money. You must use a nested query in case there are more than one customer.
 
+
 #e. Display the item(s) that is the most popular. You must use a nested query in case there are more than one item.
 
+
 #f. Find the average cost of an order for each employee in descending order.
-SELECT employees.employee_name, orders.id, orders.quantity, items.price, (orders.quantity * items.price) AS 'Total of order'  
-FROM customers
+SELECT employees.employee_name, orders.id, orders.quantity, items.price, (orders.quantity * items.price) AS 'Total of order'  FROM customers
 JOIN orders ON customers.id = orders.customer_id
 JOIN employees ON orders.employee_id = employees.id
 JOIN items ON orders.item_id = items.id
 ORDER BY orders.quantity DESC;
 
 #g. The number of orders and total amount sold of each employee.
-SELECT employees.employee_name AS 'Employee', COUNT(orders.quantity) AS 'Number of orders', (orders.quantity * items.price) AS 'Total amount sold'  
-FROM customers
+SELECT employees.employee_name AS 'Employee', COUNT(orders.quantity) AS 'Number of orders', (orders.quantity * items.price) AS 'Total amount sold'  FROM customers
 JOIN orders ON customers.id = orders.customer_id
 JOIN employees ON orders.employee_id = employees.id
 JOIN items ON orders.item_id = items.id
 GROUP BY employees.employee_name;
 
 #h. Determine which employee has the highest sales to order ratio. Meaning add up all the sales of the employee and divided by the number of orders.
+SELECT employees.employee_name AS 'Employee', COUNT(orders.quantity) AS 'Number of orders', (orders.quantity * items.price) AS 'Total amount sold', ((orders.quantity * items.price)/orders.quantity) AS 'Ratio'  FROM customers
+JOIN orders ON customers.id = orders.customer_id
+JOIN employees ON orders.employee_id = employees.id
+JOIN items ON orders.item_id = items.id
+GROUP BY employees.employee_name;
 
 #i. Two queries of your own choosing using functionality (Key words) that have not been used in this assignment so far. Create a comment to describe what your query is finding.
 
+# Add a new column (E-mail)  to customer's table
+ALTER TABLE customers
+ADD Email VARCHAR(255);
 
-
+# Fired!!!!
+DELETE FROM employees 
+WHERE employee_name = 'Nicholas Maduro';
 
 
 
