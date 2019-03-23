@@ -133,9 +133,20 @@ JOIN items ON orders.item_id = items.id
 ORDER BY orders.quantity DESC;
 
 #d. All the people who have spent the most money. You must use a nested query in case there are more than one customer.
-
+SELECT customers.name, SUM(orders.quantity * items.price) AS 'Top_Spendings'
+FROM orders INNER JOIN customers ON  customers.id = orders.customer_id
+INNER JOIN items ON items.id = orders.item_id
+GROUP BY customers.id
+ORDER BY top_spendings DESC
+;
 
 #e. Display the item(s) that is the most popular. You must use a nested query in case there are more than one item.
+SELECT customers.name, SUM(orders.quantity * items.price) AS 'Top_Spendings'
+FROM orders INNER JOIN customers ON  customers.id = orders.customer_id
+INNER JOIN items ON items.id = orders.item_id
+GROUP BY customers.id
+ORDER BY top_spendings DESC
+;
 
 
 #f. Find the average cost of an order for each employee in descending order.
