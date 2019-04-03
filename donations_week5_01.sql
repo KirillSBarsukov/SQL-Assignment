@@ -141,13 +141,15 @@ ORDER BY top_spendings DESC
 ;
 
 #e. Display the item(s) that is the most popular. You must use a nested query in case there are more than one item.
-SELECT customers.name, SUM(orders.quantity * items.price) AS 'Top_Spendings'
+
+
+WHERE = (SELECT SUM(orders.quantity * items.price) AS 'Top_Spendings'
 FROM orders INNER JOIN customers ON  customers.id = orders.customer_id
 INNER JOIN items ON items.id = orders.item_id
 GROUP BY customers.id
 ORDER BY top_spendings DESC
+limit 1)
 ;
-
 
 #f. Find the average cost of an order for each employee in descending order.
 SELECT employees.employee_name, orders.id, orders.quantity, items.price, (orders.quantity * items.price) AS 'Total of order'  FROM customers
@@ -155,6 +157,17 @@ JOIN orders ON customers.id = orders.customer_id
 JOIN employees ON orders.employee_id = employees.id
 JOIN items ON orders.item_id = items.id
 ORDER BY orders.quantity DESC;
+
+CREATE VIEW temp AS
+SELECT employees.employee_name AS name1, orders.id, orders.quantity, items.price, SUM(orders.quantity * items.price) AS Total FROM customers
+JOIN orders ON customers.id = orders.customer_id
+JOIN employees ON orders.employee_id = employees.id
+JOIN items ON orders.item_id = items.id
+GROUP BY orders.id
+ORDER BY orders.quantity DESC;
+
+SELECT name1, AVG(Total) FROM temp
+group by 1;
 
 #g. The number of orders and total amount sold of each employee.
 SELECT employees.employee_name AS 'Employee', COUNT(orders.quantity) AS 'Number of orders', (orders.quantity * items.price) AS 'Total amount sold'  FROM customers
@@ -171,14 +184,13 @@ JOIN items ON orders.item_id = items.id
 GROUP BY employees.employee_name;
 
 #i. Two queries of your own choosing using functionality (Key words) that have not been used in this assignment so far. Create a comment to describe what your query is finding.
-
 # Add a new column (E-mail)  to customer's table
 ALTER TABLE customers
 ADD Email VARCHAR(255);
 
-# Fired!!!!
-DELETE FROM employees 
-WHERE employee_name = 'Nicholas Maduro';
+-- # Fired!!!!
+-- DELETE FROM employees 
+-- WHERE employee_name = 'Nicholas Maduro';
 
 
 
