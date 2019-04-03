@@ -1,12 +1,14 @@
-USE gcc200393648;
+#Elias Aguilera 200393648
+#Kirill Barsukov 200395896
+
+USE gc200395896;
 #USE gcc200393648;
 
-DROP TABLE IF EXISTS items;
+DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS reviews;
-
 
 # Create an item table
 CREATE TABLE items (
@@ -58,7 +60,6 @@ VALUES ('Kirill', 'Varsukov'),
 ('Vladimir','Putin'),
 ('Homer','Simpsom'),
 ('Alias', 'Mumbay')
-
 ;
 
 # Insert items into the table
@@ -100,8 +101,6 @@ VALUES
 (3, '16/01/2019',1,1,1)
 ;
 
-
-
 #Insert reviews into the table
 INSERT INTO reviews (reviews, order_id)
 VALUES ('The hamburguer and the Asian girl that cooks were absolutely amazing <3!' , 1),
@@ -131,13 +130,13 @@ JOIN reviews ON orders.id = reviews.order_id
 ORDER BY orders.date DESC;
 
 #c. All customers and orders, sorted by price of orders highest first.
-SELECT customers.name, orders.id, (orders.quantity * items.price) AS 'Total_of_order'  FROM customers
+SELECT customers.name, orders.id, (orders.quantity * items.price) AS 'Total of order'  FROM customers
 JOIN orders ON customers.id = orders.customer_id
 JOIN items ON orders.item_id = items.id
-ORDER BY Total_of_order DESC; 
- 
+ORDER BY orders.quantity DESC;
 
 #d. All the people who have spent the most money. You must use a nested query in case there are more than one customer.
+#We have not finished it. It does not work
 SELECT customers.name, SUM(orders.quantity * items.price) AS 'Top_Spendings'
 FROM orders INNER JOIN customers ON  customers.id = orders.customer_id
 INNER JOIN items ON items.id = orders.item_id
@@ -146,23 +145,13 @@ ORDER BY top_spendings DESC
 ;
 
 #e. Display the item(s) that is the most popular. You must use a nested query in case there are more than one item.
-/*SELECT items.name, orders.quantity;
-
-SELECT SUM(orders.quantity) AS 'Most Populars', items.name FROM orders 
-INNER JOIN items ON orders.item_id = items.id
-GROUP BY items.name 
-ORDER BY SUM(orders.quantity) DESC
-LIMIT 1;*/
-
-
-
-/*WHERE = (SELECT SUM(orders.quantity * items.price) AS 'Top_Spendings'
+#We have not finished it. It does not work
+SELECT SUM(orders.quantity * items.price) AS 'Top_Spendings'
 FROM orders INNER JOIN customers ON  customers.id = orders.customer_id
 INNER JOIN items ON items.id = orders.item_id
 GROUP BY customers.id
 ORDER BY top_spendings DESC
-limit 1);*/
-
+limit 1;
 
 #f. Find the average cost of an order for each employee in descending order.
 SELECT employees.employee_name, orders.id, orders.quantity, items.price, (orders.quantity * items.price) AS 'Total of order'  FROM customers
@@ -183,17 +172,14 @@ SELECT name1, AVG(Total) FROM temp
 group by 1;
 
 #g. The number of orders and total amount sold of each employee.
-SELECT employees.employee_name AS 'Employee', COUNT(orders.quantity) AS 'Number of orders',SUM(orders.quantity * items.price) AS 'Total amount sold'  FROM customers
+SELECT employees.employee_name AS 'Employee', COUNT(orders.quantity) AS 'Number of orders', (orders.quantity * items.price) AS 'Total amount sold'  FROM customers
 JOIN orders ON customers.id = orders.customer_id
 JOIN employees ON orders.employee_id = employees.id
 JOIN items ON orders.item_id = items.id
 GROUP BY employees.employee_name;
 
-SELECT * FROM employees;
-SELECT * FROM orders;
-SELECT * FROM items;
 #h. Determine which employee has the highest sales to order ratio. Meaning add up all the sales of the employee and divided by the number of orders.
-SELECT employees.employee_name AS 'Employee', COUNT(orders.quantity) AS 'Number of orders', SUM(orders.quantity * items.price) AS 'Total amount sold', (SUM(orders.quantity * items.price))/(COUNT(orders.quantity)) AS 'Ratio'  FROM customers
+SELECT employees.employee_name AS 'Employee', COUNT(orders.quantity) AS 'Number of orders', (orders.quantity * items.price) AS 'Total amount sold', ((orders.quantity * items.price)/orders.quantity) AS 'Ratio'  FROM customers
 JOIN orders ON customers.id = orders.customer_id
 JOIN employees ON orders.employee_id = employees.id
 JOIN items ON orders.item_id = items.id
@@ -204,9 +190,29 @@ GROUP BY employees.employee_name;
 ALTER TABLE customers
 ADD Email VARCHAR(255);
 
--- # Fired!!!!
--- DELETE FROM employees 
--- WHERE employee_name = 'Nicholas Maduro';
+#Changed a name of the second employee.
+UPDATE employees
+SET employee_name = 'Alfred Schmidt'
+WHERE id = 2;
+
+# A new customer named Matthew Wilson just made an order that contained 2 of your first item, 
+# 3 of your second item and 1 of your 4th item. He also left a review saying “this chip truck is AMAZING!”.
+INSERT INTO customers(name, last_name, Email)
+VALUES ('Matthew' , 'Wilson', 'test@test.com');
+INSERT INTO orders(quantity, item_id, customer_id, employee_id, date)
+VALUES (2, 1, 8, 1, '03/04/2019'), (3, 2, 8, 1, '03/04/2019'), (1, 4, 8, 1, '03/04/2019');
+INSERT INTO reviews(reviews, order_id)
+VALUES ('this chip truck is AMAZING!', 17);
+
+
+
+
+
+
+
+
+
+
 
 
 
